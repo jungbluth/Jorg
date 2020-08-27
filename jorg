@@ -125,7 +125,7 @@ if [[ ! "$reads_file" = *[!\ ]* ]]; then
 fi
 
 # Name jorg logfile based on input bin and date/time
-jorg_logfile="Jorg_${bin_fasta_file}_$(date +%c | sed 's/[: ]/-/g').log"
+#jorg_logfile="Jorg_${bin_fasta_file}_$(date +%c | sed 's/[: ]/-/g').log"
 
 # Check for MIRA installation
 command -v mira >/dev/null 2>&1 || { echo >&2 "Error: unable to locate MIRA. Please make sure MIRA is installed on your system. Exiting."; exit 1; }
@@ -141,44 +141,44 @@ command -v seqtk >/dev/null 2>&1 || { echo >&2 "Error: unable to locate Seqtk. P
 
 # Start logging and timer
 jorg_time_start=$(date +%s)
-echo " "
-echo "Writing log to file:"$jorg_logfile
-echo "Jorg run on " $(date) | tee -a "$jorg_logfile"
-echo "" | tee -a "$jorg_logfile"
-echo "User environment details:" | tee -a "$jorg_logfile"
-echo "MIRA path:" $(which mira) | tee -a "$jorg_logfile"
-echo "MIRA version:" $(mira --version | grep MIRA | sed 's/MIRA //' 2>&1) | tee -a "$jorg_logfile"
-echo "MIRABAIT path:" $(which mirabait) | tee -a "$jorg_logfile"
-echo "MIRABAIT version:" $(mirabait --version | grep MIRA | sed 's/MIRABAIT //' 2>&1) | tee -a "$jorg_logfile"
-echo "seqtk path:" $(which seqtk) | tee -a "$jorg_logfile"
+# echo " "
+# echo "Writing log to file:"$jorg_logfile
+# echo "Jorg run on " $(date) | tee -a "$jorg_logfile"
+# echo "" | tee -a "$jorg_logfile"
+# echo "User environment details:" | tee -a "$jorg_logfile"
+# echo "MIRA path:" $(which mira) | tee -a "$jorg_logfile"
+# echo "MIRA version:" $(mira --version | grep MIRA | sed 's/MIRA //' 2>&1) | tee -a "$jorg_logfile"
+# echo "MIRABAIT path:" $(which mirabait) | tee -a "$jorg_logfile"
+# echo "MIRABAIT version:" $(mirabait --version | grep MIRA | sed 's/MIRABAIT //' 2>&1) | tee -a "$jorg_logfile"
+# echo "seqtk path:" $(which seqtk) | tee -a "$jorg_logfile"
 # echo "seqtk version:" $(grep Version /tmp/seqtk_version.tmp | sed 's/Version: //' 2>&1) | tee -a "$jorg_logfile"
 
 # Check for existence of input fasta file
 if [ ! -f "$bin_fasta_file" ]; then
-    echo "bin_fasta_file file not found: $bin_fasta_file" | tee -a "$jorg_logfile"
-    echo "Exiting." | tee -a "$jorg_logfile"
+    # echo "bin_fasta_file file not found: $bin_fasta_file" | tee -a "$jorg_logfile"
+    # echo "Exiting." | tee -a "$jorg_logfile"
     exit 1
 fi
 
 # Check for existence of input reads fastq file
 if [ ! -f "$reads_file" ]; then
-    echo "contig file not found: $reads_file" | tee -a "$jorg_logfile"
-    echo "Exiting." | tee -a "$jorg_logfile"
+    # echo "contig file not found: $reads_file" | tee -a "$jorg_logfile"
+    # echo "Exiting." | tee -a "$jorg_logfile"
     exit 1
 fi
 
 # Check for number of contigs in input fasta file
 if [[ $(grep -c "^>" "$bin_fasta_file") -gt 2500 ]] && [[ ! $(echo "$high_contig_num") == "no" ]]; then
-    echo "Number of contigs found in bin_fasta_file greater than 2500." | tee -a "$jorg_logfile"
-    echo "Are you certain this is a single genome? If yes, rerun with --high_contig_num 'no' flag" | tee -a "$jorg_logfile"
-    echo "Exiting." | tee -a "$jorg_logfile"
+    # echo "Number of contigs found in bin_fasta_file greater than 2500." | tee -a "$jorg_logfile"
+    # echo "Are you certain this is a single genome? If yes, rerun with --high_contig_num 'no' flag" | tee -a "$jorg_logfile"
+    # echo "Exiting." | tee -a "$jorg_logfile"
     exit 1
 fi
 
 # Until single-end mode developed and tested, Jorg should exist when it encounters single-end reads
 if [[ ! $(echo "$single_end_reads") == "no" ]]; then
-    echo "Jorg is not compatible for single-end reads - this feature is under active development." | tee -a "$jorg_logfile"
-    echo "Exiting." | tee -a "$jorg_logfile"
+    # echo "Jorg is not compatible for single-end reads - this feature is under active development." | tee -a "$jorg_logfile"
+    # echo "Exiting." | tee -a "$jorg_logfile"
     exit 1
 fi
 
@@ -195,7 +195,7 @@ fqbinID=$(echo $fqfilename | sed 's/\.fastq.gz//' | sed 's/\.fq.gz//' ) # may ne
 
 # Check for fasta and fastq files having the same prefix, causes errors during mirabait step below
 if [ $binID = $fqbinID ]; then
-    echo "Error: the fastq file prefix needs to NOT be named the same as fasta file. Exiting." | tee -a "$jorg_logfile"
+    # echo "Error: the fastq file prefix needs to NOT be named the same as fasta file. Exiting." | tee -a "$jorg_logfile"
     exit 1
 fi
 
@@ -203,16 +203,16 @@ fi
 outfile="$binID".out.fasta
 
 # Jorg running and logging
-echo " " | tee -a "$jorg_logfile"
-echo "***Start running Jorg***" | tee -a "$jorg_logfile"
+# echo " " | tee -a "$jorg_logfile"
+# echo "***Start running Jorg***" | tee -a "$jorg_logfile"
 
 # Copy input fasta file to avoid overwriting
 cp "$bin_fasta_file" "$outfile"
 
 # Make manifest file for MIRA
-echo "Start: make manifest file for MIRA" | tee -a "$jorg_logfile"
+# echo "Start: make manifest file for MIRA" | tee -a "$jorg_logfile"
 cat manifest_template.conf | sed "s/XXX/$binID/g" > manifest.conf
-echo "End: make manifest file for MIRA" | tee -a "$jorg_logfile"
+# echo "End: make manifest file for MIRA" | tee -a "$jorg_logfile"
 
 # Create file for contig stats of iterations
 printf "contig_name\tlength\tGC_percent\tcumulative_length\n" > iterations.txt
@@ -220,102 +220,102 @@ printf "contig_name\tlength\tGC_percent\tcumulative_length\n" > iterations.txt
 ####### Iterate recruiting reads and MIRA assembly #######
 
 # Prepare directory for iterative steps
-echo "Start: generating new directory named 'Iterations'" | tee -a "$jorg_logfile"
+# echo "Start: generating new directory named 'Iterations'" | tee -a "$jorg_logfile"
 mkdir -p Iterations
-echo "End: generating new directory named 'Iterations'" | tee -a "$jorg_logfile"
+# echo "End: generating new directory named 'Iterations'" | tee -a "$jorg_logfile"
 
 
 for (( i = 1; i <= "$iterations"; i++ )); do
-    echo " " | tee -a "$jorg_logfile"
-    echo "*Start: Jorg iteration # "${i}"*" | tee -a "$jorg_logfile"
+    # echo " " | tee -a "$jorg_logfile"
+    # echo "*Start: Jorg iteration # "${i}"*" | tee -a "$jorg_logfile"
     jorg_iteration_time_start=$(date +%s)
     echo "Iteration "${i} >> iterations.txt
 
     # Recruit reads with mirabait
     mirabait_time_start=$(date +%s)
-    echo "Start: recruiting reads with mirabait" | tee -a "$jorg_logfile"
+    # echo "Start: recruiting reads with mirabait" | tee -a "$jorg_logfile"
     # mirabait -k 33 -b "$outfile" -P SRX3307784_clean.fastq -o "$binID".fastq &> mirabait.log
     mirabait -k "$kmer_length" -b "$outfile" -P "$reads_file" -o "$binID".fastq &> mirabait_iteration_${i}.log
     mirabait_time_elapsed=$(( $(date +%s) - $mirabait_time_start ))
-    echo "End: recruiting reads with mirabait" - $mirabait_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
+    # echo "End: recruiting reads with mirabait" - $mirabait_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
 
     # Check if the reads file is empty.  Seqtk will hang if the input file is empty.
-    echo "Start: check if fastq file empty." | tee -a "$jorg_logfile"
+    # echo "Start: check if fastq file empty." | tee -a "$jorg_logfile"
     if [ ! -s "$binID".fastq ]; then
-        echo "Error: fastq file empty." | tee -a "$jorg_logfile"
+        # echo "Error: fastq file empty." | tee -a "$jorg_logfile"
         exit 1
     fi
-    echo "End: check if fastq file empty." | tee -a "$jorg_logfile"
+    # echo "End: check if fastq file empty." | tee -a "$jorg_logfile"
 
     # Deinterleave reads, may need modifications to work on single-end reads libraries
     deinterleave_time_start=$(date +%s)
-    echo "Start: deinterleaving reads" | tee -a "$jorg_logfile"
+    # echo "Start: deinterleaving reads" | tee -a "$jorg_logfile"
     seqtk seq -1 -C ${binID}.fastq | seqtk rename - ${binID}_ | sed "s/\(^@${binID}_[0-9][0-9]*$\)/\1\/1/" > ${binID}_1.fastq
-    echo "Forward reads extracted" | tee -a "$jorg_logfile"
+    # echo "Forward reads extracted" | tee -a "$jorg_logfile"
     seqtk seq -2 -C ${binID}.fastq | seqtk rename - ${binID}_ | sed "s/\(^@${binID}_[0-9][0-9]*$\)/\1\/2/" > ${binID}_2.fastq
-    echo "Reverse reads extracted" | tee -a "$jorg_logfile"
+    # echo "Reverse reads extracted" | tee -a "$jorg_logfile"
     deinterleave_time_elapsed=$(( $(date +%s) - $deinterleave_time_start ))
-    echo "End: deinterleaving reads" - $deinterleave_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
+    # echo "End: deinterleaving reads" - $deinterleave_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
 
     # Run MIRA assembly
     mira_assembly_time_start=$(date +%s)
-    echo "Start: run MIRA assembly" | tee -a "$jorg_logfile"
+    # echo "Start: run MIRA assembly" | tee -a "$jorg_logfile"
     mira manifest.conf &> mira_iteration_${i}.log
     mira_assembly_time_elapsed=$(( $(date +%s) - $mira_assembly_time_start ))
-    echo "End: run MIRA assembly" - $mira_assembly_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
+    # echo "End: run MIRA assembly" - $mira_assembly_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
 
     # Get MIRA assembly file
-    echo "Start: get MIRA assembly file" | tee -a "$jorg_logfile"
+    # echo "Start: get MIRA assembly file" | tee -a "$jorg_logfile"
     cp "$binID"_assembly/"$binID"_d_results/"$binID"_out.unpadded.fasta "$binID"_MIRA.fasta
-    echo "End: get MIRA assembly file" | tee -a "$jorg_logfile"
+    # echo "End: get MIRA assembly file" | tee -a "$jorg_logfile"
 
     # Get contigs that are greater than 1000bp and have coverage greater than the indicated minimum
-    echo "Start: get contigs >1000bp and with sufficient coverage" | tee -a "$jorg_logfile"
+    # echo "Start: get contigs >1000bp and with sufficient coverage" | tee -a "$jorg_logfile"
     awk -v coverage_min="$min_coverage" '{if($2 >= 1000 && $6 >= coverage_min || NR == 1) print}' "$binID"_assembly/"$binID"_d_info/"$binID"_info_contigstats.txt > list.txt
-    echo "End: get contigs >1000bp and with sufficient coverage" | tee -a "$jorg_logfile"
+    # echo "End: get contigs >1000bp and with sufficient coverage" | tee -a "$jorg_logfile"
 
     # Check to see if any contigs passed criteria for minimum length and minimum coverage
-    echo "Start: check for contigs passing minimum length and coverage criteria." | tee -a "$jorg_logfile"
+    # echo "Start: check for contigs passing minimum length and coverage criteria." | tee -a "$jorg_logfile"
     if [[ $(wc -l <list.txt) -ge 2 ]]; then
-        echo "At least one contig passed criteria for minimum length and minimum coverage - will continue attempting to close genome." | tee -a "$jorg_logfile"
+        # echo "At least one contig passed criteria for minimum length and minimum coverage - will continue attempting to close genome." | tee -a "$jorg_logfile"
     else # no contigs passed criteria
-        echo "Zero contigs passed criteria for minimum length and minimum coverage. Exiting." | tee -a "$jorg_logfile"
+        # echo "Zero contigs passed criteria for minimum length and minimum coverage. Exiting." | tee -a "$jorg_logfile"
         exit 1
     fi
-    echo "End: check for contigs passing minimum length and coverage criteria." | tee -a "$jorg_logfile"
+    # echo "End: check for contigs passing minimum length and coverage criteria." | tee -a "$jorg_logfile"
 
     # Check if the outfile is empty. Seqtk will hang if the input file is empty.
-    echo "Start: check if input fasta file empty." | tee -a "$jorg_logfile"
+    # echo "Start: check if input fasta file empty." | tee -a "$jorg_logfile"
     if [ ! -s "$outfile" ]; then
         echo "Error: fasta outfile empty."
         exit 1
     fi
-    echo "End: check if input fasta file empty." | tee -a "$jorg_logfile"
+    # echo "End: check if input fasta file empty." | tee -a "$jorg_logfile"
 
     # Output assembly based on stats collected in list.txt
     subseq_time_start=$(date +%s)
-    echo "Start: output assembly based on stats collected in list.txt" | tee -a "$jorg_logfile"
+    # echo "Start: output assembly based on stats collected in list.txt" | tee -a "$jorg_logfile"
     seqtk subseq "$binID"_MIRA.fasta list.txt > "$outfile"
     subseq_time_elapsed=$(( $(date +%s) - $subseq_time_start ))
-    echo "End: output assembly based on stats collected in list.txt" - $subseq_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
+    # echo "End: output assembly based on stats collected in list.txt" - $subseq_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
 
     # Output contig stats on assembly
     # contig_name  length  %GC  cumulative_length
-    echo "Start: output contig stats on assembly" | tee -a "$jorg_logfile"
+    # echo "Start: output contig stats on assembly" | tee -a "$jorg_logfile"
     contig_stats_time_start=$(date +%s)
     seqtk comp $binID.out.fasta | sort -k 2,2nr | awk '{printf "%-40s %8d %7.2f %8d\n", $1, $2, 100.0 * ($4 + $5)/($3 + $4 + $5 + $6), sum += $2}' >> iterations.txt
     contig_stats_time_elapsed=$(( $(date +%s) - $contig_stats_time_start ))
-    echo "End: output contig stats on assembly" - $contig_stats_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
+    # echo "End: output contig stats on assembly" - $contig_stats_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
 
     # Copy working fasta file to iterations folder
-    echo "Start: copy working fasta file to Iterations folder" | tee -a "$jorg_logfile"
+    # echo "Start: copy working fasta file to Iterations folder" | tee -a "$jorg_logfile"
     cp $binID.out.fasta Iterations/$binID_${i}.fasta
-    echo "End: copy working fasta file to Iterations folder" | tee -a "$jorg_logfile"
+    # echo "End: copy working fasta file to Iterations folder" | tee -a "$jorg_logfile"
 
     jorg_iteration_time_elapsed=$(( $(date +%s) - $jorg_iteration_time_start ))
-    echo "End: Jorg iteration # "${i} - $jorg_iteration_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
+    # echo "End: Jorg iteration # "${i} - $jorg_iteration_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
 done
 
 jorg_time_elapsed=$(( $(date +%s) - $jorg_time_start ))
-echo "***End running Jorg***" - $jorg_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
+# echo "***End running Jorg***" - $jorg_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
 # echo "***End running Jorg***" - $(($jorg_time_elapsed / 60))" minutes elapsed." | tee -a "$jorg_logfile"

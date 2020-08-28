@@ -125,7 +125,8 @@ if [[ ! "$reads_file" = *[!\ ]* ]]; then
 fi
 
 # Name jorg logfile based on input bin and date/time
-jorg_logfile="Jorg_${bin_fasta_file}_$(date +%c | sed 's/[: ]/-/g').log"
+
+jorg_logfile="Jorg_$(basename ${bin_fasta_file})_$(date +%c | sed 's/[: ]/-/g').log"
 
 # Check for MIRA installation
 command -v mira >/dev/null 2>&1 || { echo >&2 "Error: unable to locate MIRA. Please make sure MIRA is installed on your system. Exiting."; exit 1; }

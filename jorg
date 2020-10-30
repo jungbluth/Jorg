@@ -310,7 +310,7 @@ for (( i = 1; i <= "$iterations"; i++ )); do
     echo "\${binID}.out.fasta is " | tee -a "$jorg_logfile"
     echo ${binID}.out.fasta | tee -a "$jorg_logfile"
     echo "head A.txt" | tee -a "$jorg_logfile"
-    seqtk comp ${binID}.out.fasta | tee -a "$jorg_logfile" &> A.txt
+    seqtk comp ${binID}.out.fasta | tee -a "$jorg_logfile" > A.txt 2> Aerror.txt
     head A.txt | tee -a "$jorg_logfile"
     echo "head B.txt" | tee -a "$jorg_logfile"
     sort -k 2,2nr A.txt | tee -a "$jorg_logfile" > B.txt

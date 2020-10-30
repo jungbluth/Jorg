@@ -304,16 +304,18 @@ for (( i = 1; i <= "$iterations"; i++ )); do
     # contig_name  length  %GC  cumulative_length
     echo "Start: output contig stats on assembly" | tee -a "$jorg_logfile"
     contig_stats_time_start=$(date +%s)
-    seqtk comp ${binID}.out.fasta | sort -k 2,2nr | awk '{printf "%-40s %8d %7.2f %8d\n", $1, $2, 100.0 * ($4 + $5)/($3 + $4 + $5 + $6), sum += $2}' >> iterations.txt
-    # echo "head A.txt" | tee -a "$jorg_logfile"
-    # seqtk comp $binID.out.fasta | tee -a "$jorg_logfile" > A.txt
-    # head A.txt | tee -a "$jorg_logfile"
-    # echo "head B.txt"
-    # sort -k 2,2nr A.txt | tee -a "$jorg_logfile" > B.txt
-    # head B.txt | tee -a "$jorg_logfile"
-    # echo "head C.txt" | tee -a "$jorg_logfile"
-    # awk '{printf "%-40s %8d %7.2f %8d\n", $1, $2, 100.0 * ($4 + $5)/($3 + $4 + $5 + $6), sum += $2}' B.txt | tee -a "$jorg_logfile" > C.txt
-    # head C.txt | tee -a "$jorg_logfile"
+    #seqtk comp ${binID}.out.fasta | sort -k 2,2nr | awk '{printf "%-40s %8d %7.2f %8d\n", $1, $2, 100.0 * ($4 + $5)/($3 + $4 + $5 + $6), sum += $2}' >> iterations.txt
+    echo "$binID is " | tee -a "$jorg_logfile"
+    echo $binID | tee -a "$jorg_logfile"
+    echo "head A.txt" | tee -a "$jorg_logfile"
+    seqtk comp $binID.out.fasta | tee -a "$jorg_logfile" > A.txt
+    head A.txt | tee -a "$jorg_logfile"
+    echo "head B.txt"
+    sort -k 2,2nr A.txt | tee -a "$jorg_logfile" > B.txt
+    head B.txt | tee -a "$jorg_logfile"
+    echo "head C.txt" | tee -a "$jorg_logfile"
+    awk '{printf "%-40s %8d %7.2f %8d\n", $1, $2, 100.0 * ($4 + $5)/($3 + $4 + $5 + $6), sum += $2}' B.txt | tee -a "$jorg_logfile" > C.txt
+    head C.txt | tee -a "$jorg_logfile"
     contig_stats_time_elapsed=$(( $(date +%s) - $contig_stats_time_start ))
     echo "End: output contig stats on assembly" - $contig_stats_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
 

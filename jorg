@@ -192,7 +192,7 @@ fqfilepath=${reads_file}
 fafilename=$(basename "$fafilepath")
 fqfilename=$(basename "$fqfilepath")
 binID=$(echo "${fafilename%.*}" )
-fqbinID=$(echo $fqfilename | sed 's/\.fastq.gz//' | sed 's/\.fq.gz//' ) # may need better solution to remove .fq.gz and .fastq.gz
+fqbinID=$(echo $fqfilename | sed 's/\.fastq.gz$//' | sed 's/\.fastq$//' | sed 's/\.fq.gz$//' ) # may need better solution to remove .fq.gz and .fastq.gz
 
 # Check for fasta and fastq files having the same prefix, causes errors during mirabait step below
 if [ $binID = $fqbinID ]; then
@@ -200,14 +200,13 @@ if [ $binID = $fqbinID ]; then
     exit 1
 fi
 
-# Copy original file to avoid rewriting over it
-outfile="$binID".out.fasta
 
 # Jorg running and logging
 echo " " | tee -a "$jorg_logfile"
 echo "***Start running Jorg***" | tee -a "$jorg_logfile"
 
 # Copy input fasta file to avoid overwriting
+outfile="$binID".out.fasta
 cp "$bin_fasta_file" "$outfile"
 
 # Make manifest file for MIRA
@@ -296,7 +295,16 @@ for (( i = 1; i <= "$iterations"; i++ )); do
     # Output assembly based on stats collected in list.txt
     subseq_time_start=$(date +%s)
     echo "Start: output assembly based on stats collected in list.txt" | tee -a "$jorg_logfile"
-    seqtk subseq "$binID"_MIRA.fasta list.txt > "$outfile"
+    seqtk subseq ${binID}_MIRA.fasta list.txt > "$outfile"
+
+    # Check if the outfile is empty. Seqtk will hang if the input file is empty.
+    echo "Start: check if input fasta file empty after second round." | tee -a "$jorg_logfile"
+    if [ ! -s "$outfile" ]; then
+        echo "Error: fasta outfile empty after second round."
+        exit 1
+    fi
+    echo "End: check if input fasta file empty after second round." | tee -a "$jorg_logfile"
+
     subseq_time_elapsed=$(( $(date +%s) - $subseq_time_start ))
     echo "End: output assembly based on stats collected in list.txt" - $subseq_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
 

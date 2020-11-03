@@ -295,6 +295,8 @@ for (( i = 1; i <= "$iterations"; i++ )); do
     # Output assembly based on stats collected in list.txt
     subseq_time_start=$(date +%s)
     echo "Start: output assembly based on stats collected in list.txt" | tee -a "$jorg_logfile"
+    echo "${binID}_MIRA.fasta is" | tee -a "$jorg_logfile"
+    echo "$outfile is" | tee -a "$jorg_logfile"
     seqtk subseq ${binID}_MIRA.fasta list.txt > "$outfile"
 
     # Check if the outfile is empty. Seqtk will hang if the input file is empty.

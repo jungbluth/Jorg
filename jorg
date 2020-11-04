@@ -300,12 +300,12 @@ for (( i = 1; i <= "$iterations"; i++ )); do
     seqtk subseq ${binID}_MIRA.fasta list.txt > "$outfile"
 
     # Check if the outfile is empty. Seqtk will hang if the input file is empty.
-    echo "Start: check if input fasta file empty after second round." | tee -a "$jorg_logfile"
-    if [ ! -s "$outfile" ]; then
-        echo "Error: fasta outfile empty after second round."
-        exit 1
-    fi
-    echo "End: check if input fasta file empty after second round." | tee -a "$jorg_logfile"
+    # echo "Start: check if input fasta file empty after second round." | tee -a "$jorg_logfile"
+    # if [ ! -s "$outfile" ]; then
+    #     echo "Error: fasta outfile empty after second round."
+    #     exit 1
+    # fi
+    # echo "End: check if input fasta file empty after second round." | tee -a "$jorg_logfile"
 
     subseq_time_elapsed=$(( $(date +%s) - $subseq_time_start ))
     echo "End: output assembly based on stats collected in list.txt" - $subseq_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"

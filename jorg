@@ -315,9 +315,10 @@ for (( i = 1; i <= "$iterations"; i++ )); do
     echo "Start: output contig stats on assembly" | tee -a "$jorg_logfile"
     contig_stats_time_start=$(date +%s)
     #seqtk comp ${binID}.out.fasta | sort -k 2,2nr | awk '{printf "%-40s %8d %7.2f %8d\n", $1, $2, 100.0 * ($4 + $5)/($3 + $4 + $5 + $6), sum += $2}' >> iterations.txt
-    awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' ${1} ${binID}.out.fasta | tail -n+2 | paste - - > ${binID}.out.tmp.fasta
-    awk '{print $1}' ${binID}.out.tmp.fasta | sed 's/^>//' > tmpA
-    awk '{print $2}' ${binID}.out.tmp.fasta > tmpB
+    awk '{print $1}' ${binID}.out.fasta | awk '/^>/ {print($0)}; /^[^>]/ {print(toupper($0))}' > ${binID}.out.tmp1.fasta
+    awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' ${1} ${binID}.out.tmp1.fasta | tail -n+2 | paste - - > ${binID}.out.tmp2.fasta
+    awk '{print $1}' ${binID}.out.tmp2.fasta | sed 's/^>//' > tmpA
+    awk '{print $2}' ${binID}.out.tmp2.fasta > tmpB
     for line in $(cat tmpB); do expr length $line; done > tmpC
     for line in $(cat tmpB); do echo $line | tr -cd 'A' | wc -c; done > tmpD
     for line in $(cat tmpB); do echo $line | tr -cd 'C' | wc -c; done > tmpE

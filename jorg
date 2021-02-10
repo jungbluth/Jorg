@@ -315,21 +315,30 @@ for (( i = 1; i <= "$iterations"; i++ )); do
     echo "Start: output contig stats on assembly" | tee -a "$jorg_logfile"
     contig_stats_time_start=$(date +%s)
     #seqtk comp ${binID}.out.fasta | sort -k 2,2nr | awk '{printf "%-40s %8d %7.2f %8d\n", $1, $2, 100.0 * ($4 + $5)/($3 + $4 + $5 + $6), sum += $2}' >> iterations.txt
-    echo "$\binID is " | tee -a "$jorg_logfile"
-    echo $binID | tee -a "$jorg_logfile"
-    echo "\${binID}.out.fasta is " | tee -a "$jorg_logfile"
-    echo ${binID}.out.fasta | tee -a "$jorg_logfile"
-    echo "head A.txt" | tee -a "$jorg_logfile"
+    awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' ${1} ${binID}.out.fasta | tail -n+2 | paste - - > ${binID}.out.tmp.fasta
+    awk '{print $1}' ${binID}.out.tmp.fasta | sed 's/^>//' > tmpA
+    awk '{print $2}' ${binID}.out.tmp.fasta > tmpB
+    for line in $(cat tmpB); do expr length $line; done > tmpC
+    for line in $(cat tmpB); do echo $line | tr -cd 'A' | wc -c; done > tmpD
+    for line in $(cat tmpB); do echo $line | tr -cd 'C' | wc -c; done > tmpE
+    for line in $(cat tmpB); do echo $line | tr -cd 'G' | wc -c; done > tmpF
+    for line in $(cat tmpB); do echo $line | tr -cd 'T' | wc -c; done > tmpG
+    paste tmpA tmpC tmpD tmpE tmpF tmpG | sort -k 2,2nr | awk '{printf "%-40s %8d %7.2f %8d\n", $1, $2, 100.0 * ($4 + $5)/($3 + $4 + $5 + $6), sum += $2}' >> iterations.txt
+    #echo "$\binID is " | tee -a "$jorg_logfile"
+    #echo $binID | tee -a "$jorg_logfile"
+    #echo "\${binID}.out.fasta is " | tee -a "$jorg_logfile"
+    #echo ${binID}.out.fasta | tee -a "$jorg_logfile"
+    #echo "head A.txt" | tee -a "$jorg_logfile"
     #seqtk comp ${binID}.out.fasta | tee -a "$jorg_logfile" > Aerror.txt 2>&1
-    seqtk comp ${binID}.out.fasta | tee -a "$jorg_logfile" > A.txt 2>&1
-    head A.txt | tee -a "$jorg_logfile"
-    echo "head B.txt" | tee -a "$jorg_logfile"
-    sort -k 2,2nr A.txt | tee -a "$jorg_logfile" > B.txt
-    head B.txt | tee -a "$jorg_logfile"
-    echo "head C.txt" | tee -a "$jorg_logfile"
-    awk '{printf "%-40s %8d %7.2f %8d\n", $1, $2, 100.0 * ($4 + $5)/($3 + $4 + $5 + $6), sum += $2}' B.txt | tee -a "$jorg_logfile" > C.txt
-    head C.txt | tee -a "$jorg_logfile"
-    cat C.txt >> iterations.txt
+    #seqtk comp ${binID}.out.fasta | tee -a "$jorg_logfile" > A.txt 2>&1
+    #head A.txt | tee -a "$jorg_logfile"
+    #echo "head B.txt" | tee -a "$jorg_logfile"
+    #sort -k 2,2nr A.txt | tee -a "$jorg_logfile" > B.txt
+    #head B.txt | tee -a "$jorg_logfile"
+    #echo "head C.txt" | tee -a "$jorg_logfile"
+    #awk '{printf "%-40s %8d %7.2f %8d\n", $1, $2, 100.0 * ($4 + $5)/($3 + $4 + $5 + $6), sum += $2}' B.txt | tee -a "$jorg_logfile" > C.txt
+    #head C.txt | tee -a "$jorg_logfile"
+    #cat C.txt >> iterations.txt
     contig_stats_time_elapsed=$(( $(date +%s) - $contig_stats_time_start ))
     echo "End: output contig stats on assembly" - $contig_stats_time_elapsed" seconds elapsed." | tee -a "$jorg_logfile"
 

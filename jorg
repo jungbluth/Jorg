@@ -183,7 +183,7 @@ if [[ ! $(echo "$single_end_reads") == "no" ]]; then
     exit 1
 fi
 
-# Jorg variable declarations
+# Jorg variable declarations, keep active for debugging in KBase
 # Get the bin ID by removing the file extension
 # fafilepath="bin.186.fa"
 # fqfilepath="SRX3307784_clean.fastq.gz"
@@ -197,11 +197,14 @@ fqfilename=$(basename "$fqfilepath")
 echo "fqfilename is $fqfilename" | tee -a "$jorg_logfile"
 binID=$(echo "${fafilename%.*}" )
 echo "binID is $binID" | tee -a "$jorg_logfile"
+
+# not working
 fqbinID=$(echo $fqbinID | sed 's/\.fastq.gz$//' | sed 's/\.fastq$//' | sed 's/\.fq.gz$//' ) # may need better solution to remove .fq.gz and .fastq.gz
 echo "fqbinID is $fqbinID" | tee -a "$jorg_logfile"
 
 # Check for fasta and fastq files having the same prefix, causes errors during mirabait step below
-if [ $binID = $fqbinID ]; then
+# not working
+if [[ $binID = $fqbinID ]]; then
     echo "Error: the fastq file prefix needs to NOT be named the same as fasta file. Exiting." | tee -a "$jorg_logfile"
     exit 1
 fi
@@ -215,6 +218,9 @@ echo "***Start running Jorg***" | tee -a "$jorg_logfile"
 outfile="$binID".out.fasta
 echo "outfile is $outfile" | tee -a "$jorg_logfile"
 cp "$bin_fasta_file" "$outfile"
+ls -alt "$bin_fasta_file" | tee -a "$jorg_logfile"
+ls -alt "$outfile" | tee -a "$jorg_logfile"
+
 
 # Make manifest file for MIRA
 echo "Start: make manifest file for MIRA" | tee -a "$jorg_logfile"

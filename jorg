@@ -188,11 +188,17 @@ fi
 # fafilepath="bin.186.fa"
 # fqfilepath="SRX3307784_clean.fastq.gz"
 fafilepath=${bin_fasta_file}
+echo "fafilepath is $fafilepath" | tee -a "$jorg_logfile"
 fqfilepath=${reads_file}
+echo "fqfilepath is $fqfilepath" | tee -a "$jorg_logfile"
 fafilename=$(basename "$fafilepath")
+echo "fafilename is $fafilename" | tee -a "$jorg_logfile"
 fqfilename=$(basename "$fqfilepath")
+echo "fqfilename is $fqfilename" | tee -a "$jorg_logfile"
 binID=$(echo "${fafilename%.*}" )
-fqbinID=$(echo $fqfilename | sed 's/\.fastq.gz$//' | sed 's/\.fastq$//' | sed 's/\.fq.gz$//' ) # may need better solution to remove .fq.gz and .fastq.gz
+echo "binID is $binID" | tee -a "$jorg_logfile"
+fqbinID=$(echo $fqbinID | sed 's/\.fastq.gz$//' | sed 's/\.fastq$//' | sed 's/\.fq.gz$//' ) # may need better solution to remove .fq.gz and .fastq.gz
+echo "fqbinID is $fqbinID" | tee -a "$jorg_logfile"
 
 # Check for fasta and fastq files having the same prefix, causes errors during mirabait step below
 if [ $binID = $fqbinID ]; then
@@ -207,6 +213,7 @@ echo "***Start running Jorg***" | tee -a "$jorg_logfile"
 
 # Copy input fasta file to avoid overwriting
 outfile="$binID".out.fasta
+echo "outfile is $outfile" | tee -a "$jorg_logfile"
 cp "$bin_fasta_file" "$outfile"
 
 # Make manifest file for MIRA

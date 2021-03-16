@@ -310,8 +310,14 @@ for (( i = 1; i <= "$iterations"; i++ )); do
     echo "Start: output assembly based on stats collected in list.txt" | tee -a "$jorg_logfile"
     echo "${binID}_MIRA.fasta is" | tee -a "$jorg_logfile"
     echo "$outfile is" | tee -a "$jorg_logfile"
+    ls -alt "${binID}_MIRA.fasta" | tee -a "$jorg_logfile"
+    ls -alt list.txt | tee -a "$jorg_logfile"
+    ls -alt "$outfile" | tee -a "$jorg_logfile"
     seqtk subseq ${binID}_MIRA.fasta list.txt > "$outfile"
-
+    ls -alt "${binID}_MIRA.fasta" | tee -a "$jorg_logfile"
+    ls -alt list.txt | tee -a "$jorg_logfile"
+    ls -alt "$outfile" | tee -a "$jorg_logfile"
+    
     # Check if the outfile is empty. Seqtk will hang if the input file is empty.
     # echo "Start: check if input fasta file empty after second round." | tee -a "$jorg_logfile"
     # if [ ! -s "$outfile" ]; then

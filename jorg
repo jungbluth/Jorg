@@ -313,11 +313,13 @@ for (( i = 1; i <= "$iterations"; i++ )); do
     ls -alt "${binID}_MIRA.fasta" | tee -a "$jorg_logfile"
     ls -alt list.txt | tee -a "$jorg_logfile"
     ls -alt "$outfile" | tee -a "$jorg_logfile"
-    seqtk subseq ${binID}_MIRA.fasta list.txt > "$outfile"
+    #seqtk subseq ${binID}_MIRA.fasta list.txt > "$outfile"
+    sed -i 's/ .*//' list.txt
+    seqkit grep -f list.txt ${binID}_MIRA.fasta -o "$outfile"
     ls -alt "${binID}_MIRA.fasta" | tee -a "$jorg_logfile"
     ls -alt list.txt | tee -a "$jorg_logfile"
     ls -alt "$outfile" | tee -a "$jorg_logfile"
-    
+
     # Check if the outfile is empty. Seqtk will hang if the input file is empty.
     # echo "Start: check if input fasta file empty after second round." | tee -a "$jorg_logfile"
     # if [ ! -s "$outfile" ]; then
